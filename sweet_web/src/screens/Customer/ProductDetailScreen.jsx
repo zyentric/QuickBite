@@ -14,7 +14,6 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import api from "../../utils/api";
 import { useCartStore } from "../../stores/cartStore";
 import { useAuthStore } from "../../stores/authStore";
