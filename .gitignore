@@ -4,7 +4,6 @@ ios/build/
 android/app/build/
 android/app/debug/
 android/app/release/
-Sweet_Shop
 *.log
 *.iml
 
