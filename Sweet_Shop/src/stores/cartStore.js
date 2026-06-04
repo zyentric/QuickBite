@@ -7,7 +7,7 @@ export const useCartStore = create((set, get) => ({
   items: [],
 
   fetchCart: async () => {
-    const userId = useAuthStore.getState().user?._id;
+    const userId = useAuthStore.getState().user?.id;
     if (!userId) return;
     try {
       const res = await api.get(`/cart/user/${userId}`);
@@ -25,14 +25,14 @@ export const useCartStore = create((set, get) => ({
       const newQty = existing ? existing.quantity + qty : qty;
       await api.post('/cart', { productId: product._id, quantity: newQty });
       await get().fetchCart();
-      Alert.alert('Success', `${product.name} added to cart`);
+      // Toast notification is now handled in the component
     } catch (err) {
       Alert.alert('Error', 'Failed to add to cart');
     }
   },
 
   updateQuantity: async (id, qty) => {
-    const userId = useAuthStore.getState().user?._id;
+    const userId = useAuthStore.getState().user?.id;
     if (!userId) return;
     try {
       await api.put('/cart/update', { productId: id, quantity: qty });
@@ -43,7 +43,7 @@ export const useCartStore = create((set, get) => ({
   },
 
   clearCart: async () => {
-    const userId = useAuthStore.getState().user?._id;
+    const userId = useAuthStore.getState().user?.id;
     if (!userId) return;
     try {
       await api.delete(`/cart/clear/${userId}`);

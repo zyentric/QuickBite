@@ -16,7 +16,7 @@ export const useAuthStore = create((set, get) => ({
       if (token && userStr) {
         const user = JSON.parse(userStr);
         set({ token, user, isAdmin: user.role === 'admin', initialized: true });
-        if (user._id) await useCartStore.getState().fetchCart();
+        if (user.id) await useCartStore.getState().fetchCart();
       } else {
         set({ initialized: true });
       }
@@ -31,7 +31,7 @@ export const useAuthStore = create((set, get) => ({
     await AsyncStorage.setItem('token', token);
     await AsyncStorage.setItem('user', JSON.stringify(user));
     set({ token, user, isAdmin: user.role === 'admin' });
-    if (user._id) await useCartStore.getState().fetchCart();
+    if (user.id) await useCartStore.getState().fetchCart();
   },
 
   signup: async (email, password, phone) => {
@@ -40,7 +40,7 @@ export const useAuthStore = create((set, get) => ({
     await AsyncStorage.setItem('token', token);
     await AsyncStorage.setItem('user', JSON.stringify(user));
     set({ token, user, isAdmin: user.role === 'admin' });
-    if (user._id) await useCartStore.getState().fetchCart();
+    if (user.id) await useCartStore.getState().fetchCart();
   },
 
   logout: async () => {

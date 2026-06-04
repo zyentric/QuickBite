@@ -26,6 +26,7 @@ xcuserdata/
 # Android
 local.properties
 *.keystore
+!my-release-key.keystore
 
 # Firebase
 android/app/google-services.json

@@ -79,10 +79,13 @@ const CheckoutScreen = () => {
             productId: i.product._id,
             quantity: i.quantity,
             price: i.product.price,
+            name: i.product.name,
           })),
           total,
           address,
           location,
+          paymentId: payment.razorpay_payment_id,
+          paymentStatus: 'paid',
         };
         await placeOrder(orderPayload);
         clearCart();
