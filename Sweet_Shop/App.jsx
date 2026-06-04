@@ -12,9 +12,13 @@ const theme = {
   },
 };
 
+import { ToastProvider } from './src/components/Toast';
+
 const App = () => (
   <PaperProvider theme={theme}>
-    <AppNavigator />
+    <ToastProvider>
+      <AppNavigator />
+    </ToastProvider>
   </PaperProvider>
 );
 

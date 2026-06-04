@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Title, Paragraph, Button } from 'react-native-paper';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 
 const ProductCard = ({ product, onDelete, onAddToCart, onViewDetails }) => {
   const confirmDelete = () => {
@@ -18,9 +18,31 @@ const ProductCard = ({ product, onDelete, onAddToCart, onViewDetails }) => {
     );
   };
 
+  const scale = React.useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
-    <Card style={styles.card} onPress={() => onViewDetails && onViewDetails(product)}>
-      <Card.Cover
+    <TouchableWithoutFeedback 
+      onPress={() => onViewDetails && onViewDetails(product)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+    >
+      <Animated.View style={{ transform: [{ scale }] }}>
+        <Card style={styles.card}>
+          <Card.Cover
         source={{ uri: product.image || 'https://via.placeholder.com/300' }}
         style={styles.image}
       />
@@ -52,7 +74,9 @@ const ProductCard = ({ product, onDelete, onAddToCart, onViewDetails }) => {
           </Button>
         )}
       </Card.Actions>
-    </Card>
+        </Card>
+      </Animated.View>
+    </TouchableWithoutFeedback>
   );
 };
 

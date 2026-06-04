@@ -11,7 +11,10 @@ import {
 } from 'react-native';
 import { Title, TextInput, Badge, IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ProductCard from '../../components/ProductCard';
+import Shimmer from '../../components/Shimmer';
+import { useToast } from '../../components/Toast';
 import api from '../../utils/api';
 import { useCartStore } from '../../stores/cartStore';
 const { useNavigation } = require('@react-navigation/native');
@@ -22,8 +25,18 @@ const HomeScreen = () => {
   const [search, setSearch] = useState('');
   const addToCart = useCartStore(state => state.addItem);
   const cartItems = useCartStore(state => state.items);
-  const setLoading = useLoadingStore(state => state.setLoading);
+  const { isLoading, setLoading } = useLoadingStore(state => ({
+    isLoading: state.isLoading,
+    setLoading: state.setLoading
+  }));
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  const { showToast } = useToast();
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    showToast(`Added ${product.name} to cart!`, 'success');
+  };
 
   const cartCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
@@ -48,9 +61,9 @@ const HomeScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       <StatusBar barStyle="light-content" backgroundColor="#171a29" />
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 20) + 10 }]}>
         <View>
           <Text style={styles.greeting}>Welcome to</Text>
           <Title style={styles.headerTitle}>Sweet Shop Delights</Title>
@@ -78,20 +91,40 @@ const HomeScreen = () => {
           style={styles.search}
         />
       </View>
-      <FlatList
-        data={filtered}
-        renderItem={({ item }) => (
-          <ProductCard
-            product={item}
-            onAddToCart={addToCart}
-            onViewDetails={() =>
-              navigation.navigate('ProductDetail', { product: item })
-            }
-          />
-        )}
-        keyExtractor={item => item._id}
-        contentContainerStyle={{ paddingBottom: 120 }}
-      />
+      {isLoading ? (
+        <View style={{ paddingHorizontal: 16 }}>
+          {[1, 2, 3].map(i => (
+            <View key={i} style={{ marginBottom: 16 }}>
+              <Shimmer width="100%" height={200} borderRadius={20} />
+              <View style={{ padding: 12 }}>
+                <Shimmer width="60%" height={24} style={{ marginBottom: 8 }} />
+                <Shimmer width="40%" height={20} />
+              </View>
+            </View>
+          ))}
+        </View>
+      ) : (
+        <FlatList
+          data={filtered}
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              onAddToCart={handleAddToCart}
+              onViewDetails={() =>
+                navigation.navigate('ProductDetail', { product: item })
+              }
+            />
+          )}
+          keyExtractor={item => item._id}
+          contentContainerStyle={{ paddingBottom: 120 }}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Icon name="cookie" size={80} color="#cbd5e1" />
+              <Text style={styles.emptyText}>No sweets found!</Text>
+            </View>
+          }
+        />
+      )}
     </View>
   );
 };
@@ -151,6 +184,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 60,
+  },
+  emptyText: {
+    marginTop: 16,
+    fontSize: 18,
+    color: '#64748b',
+    fontWeight: '600',
+  }
 });
 
 export default HomeScreen;

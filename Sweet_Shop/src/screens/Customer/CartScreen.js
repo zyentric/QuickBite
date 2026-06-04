@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { Button, Title } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CartItem from '../../components/CartItem';
 import { useCartStore } from '../../stores/cartStore';
 const { useNavigation } = require('@react-navigation/native');
@@ -8,12 +10,23 @@ const { useNavigation } = require('@react-navigation/native');
 const CartScreen = () => {
   const { items, updateQuantity, getTotal, clearCart } = useCartStore();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <Title style={styles.headerTitle}>Your Cart</Title>
       {items.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Your cart is empty</Text>
+          <Icon name="cart-remove" size={100} color="#cbd5e1" />
+          <Text style={styles.emptyText}>Your cart is completely empty</Text>
+          <Button 
+            mode="contained" 
+            onPress={() => navigation.navigate('Home')}
+            style={styles.shopBtn}
+            buttonColor="#F97316"
+          >
+            Start Shopping
+          </Button>
         </View>
       ) : (
         <FlatList
@@ -27,7 +40,7 @@ const CartScreen = () => {
       )}
 
       {items.length > 0 && (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 20) }]}>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalAmount}>₹{getTotal()}</Text>
@@ -69,10 +82,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 100,
   },
   emptyText: {
-    fontSize: 18,
-    color: '#9ca3af',
+    fontSize: 20,
+    color: '#64748b',
+    fontWeight: '600',
+    marginTop: 16,
+    marginBottom: 24,
+  },
+  shopBtn: {
+    borderRadius: 12,
+    paddingHorizontal: 16,
   },
   bottomBar: {
     position: 'absolute',
