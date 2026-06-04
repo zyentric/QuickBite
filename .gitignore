@@ -1,0 +1,45 @@
+# React Native
+node_modules/
+ios/build/
+android/app/build/
+android/app/debug/
+android/app/release/
+Sweet_Shop
+*.log
+*.iml
+
+# Environment variables
+.env
+.env
+
+# macOS
+.DS_Store
+
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcworkspace/
+!default.xcworkspace/
+xcuserdata/
+
+# Android
+local.properties
+*.keystore
+
+# Firebase
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Backup files
+*.bak
+*.swp
+
+# Test artifacts
+coverage/
+__tests__/
+
+# IDEs
+.idea/
+*.vscode/
