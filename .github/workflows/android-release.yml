@@ -34,7 +34,9 @@ jobs:
 
       - name: Build Android Release APK
         working-directory: ./Sweet_Shop/android
-        run: ./gradlew assembleRelease --no-daemon
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
